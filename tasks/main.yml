@@ -1,2 +1,28 @@
----
-
+--
+- name: 'Creating temp file for keystore'
+  local_action:
+    module: 'ansible.builtin.tempfile'
+  register: keystore_temp
+- name: 'Converting PEM keypair to keystore'
+  local_action:
+    module: 'community.general.java_keystore'
+    dest: "{{ keystore_temp.path }}"
+    private_key_path: "{{ key_path }}"
+    certificate_path: "{{ cert_path }}"
+    keystore_type: "{{ unifi_keystore_type }}"
+    force: true
+    name: "{{ unifi_keystore_cert_name }}"
+    password: "{{ unifi_keystore_passphrase }}"-
+- name: "Overriting existing keystore"
+  ansible.builtin.copy:
+    src: "{{ keystore_temp.path }}"
+    dest: "{{ unifi_keystore_file }}"
+    mode: "{{ unifi_keystore_mode }}"
+    owner: "{{ unifi_keystore_owner }}"
+    group: "{{ unifi_keystore_group }}"
+- name: "Removing temp file"
+  local_action:   
+    module: 'ansible.builtin.file'
+    path: "{{ keystore_temp.path }}"
+    state: "absent"
+  

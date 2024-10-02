@@ -1,2 +1,7 @@
 ---
-
+unifi_keystore_type: 'jks'
+unifi_keystore_mode: '600'
+unifi_keystore_owner: 'root'
+unifi_keystore_group: 'root'
+unifi_keystore_cert_name: 'unifi'
+unifi_keystore_passphrase: 'aircontrolenterprise'
